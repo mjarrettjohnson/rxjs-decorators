@@ -1,0 +1,23 @@
+{
+  "name": "rxjs-decorators",
+  "version": "1.0.0",
+  "description": "A series of decorators to use with RxJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers ts:ts-node/register ./src/**/*.spec.ts --watch"
+  },
+  "author": "Miles Johnson",
+  "license": "ISC",
+  "dependencies": {
+    "rxjs": "^6.2.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.5.4",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  }
+}
