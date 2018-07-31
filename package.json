@@ -11,14 +11,14 @@
   "author": "Miles Johnson",
   "license": "ISC",
   "dependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.5.4",
     "reflect-metadata": "^0.1.12",
     "reselect": "^3.0.1",
     "rxjs": "^6.2.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.5.4",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "ts-node": "^7.0.0",
