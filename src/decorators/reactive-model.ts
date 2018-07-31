@@ -1,149 +1,264 @@
-import { PROP_METADATA, SELECTOR_METADATA, SUBSCRIPTION_METADATA, COMBINATION_METADATA } from './metadata';
-import { UnaryFunction } from 'rxjs';
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import { CombinationMetaData, MetaData } from './create-decorator';
-import { tap } from 'rxjs/internal/operators/tap';
-import * as util from 'util';
+import { Observable } from '../../node_modules/rxjs';
+import {
+  AllMetadata,
+  CreationOperatorMetadata,
+  CREATION_OPERATOR,
+  MapToOperatorMetadata,
+  MAP_TO_OPERATOR,
+  MonoOperator,
+  MonoOperatorListMetadata,
+  MonoOperatorMetadata,
+  MONO_OPERATOR,
+  MONO_OPERATOR_LIST,
+  MultiOperatorMetadata,
+  MULTI_OPERATOR,
+  PropertyMetadataContainer,
+  PROP_METADATA,
+  SELECTOR_FUNCTION,
+  SelectorMetadata,
+} from './creation/create-property-decorator';
+import {
+  SubscriptionMetadata,
+  SubscriptionMetadataContainer,
+  SUBSCRIPTION_METADATA,
+} from './creation/create-subscription-decorator';
+import { isObservable, pipeFromArray } from './utils';
 
-const print = (x) => console.log(util.inspect(x), '\n\n');
+export class PropertyDoesNotExistError extends Error {
+  constructor(context: ReactiveModel, property: string, decorator: string) {
+    super();
+    this.message = `PropertyDoesNotExistError
+     ------------------------------
+     Class: ${context.constructor.name}
+     Property: ${property}
+     Decorator: ${decorator}
+     Message: Property is undefined
+     ------------------------------`;
+  }
+}
 
+export class PropertyIsNotObservableError extends Error {
+  constructor(context: ReactiveModel, property: string, decorator: string) {
+    super();
+    this.message = `PropertyIsNotObservableError
+     ------------------------------
+     Class: ${context.constructor.name}
+     Property: ${property}
+     Decorator: ${decorator}
+     Message: Property is not an observable
+     ------------------------------
+    `;
+  }
+}
 
-const map: WeakMap<Subscription, string> = new WeakMap();
+export class FunctionDoesNotExistError extends Error {
+  constructor(context: ReactiveModel, property: string, decorator: string) {
+    super();
+    this.message = `FunctionDoesNotExistError
+     ------------------------------
+     Class: ${context.constructor.name}
+     Function: ${property}
+     Decorator: ${decorator}
+     Message: Function does not exist
+     ------------------------------
+    `;
+  }
+}
+
+export class DifferentOperatorAndFunctionCountError extends Error {
+  constructor(context: ReactiveModel, property: string, decorator: string) {
+    super();
+    this.message = `DifferentOperatorAndFunctionCountError
+     ------------------------------
+     Class: ${context.constructor.name}
+     Function: ${property}
+     Decorator: ${decorator}
+     Message: You have supplied a different number of operator and callable functions
+     ------------------------------
+    `;
+  }
+}
+
+export class NoStoreProvidedError extends Error {
+  constructor(context: ReactiveModel, property: string) {
+    super();
+    this.message = `NoStoreProvidedError
+     ------------------------------
+     Class: ${context.constructor.name}
+     Function: ${property}
+     Message: You have tried to call a selector function without providing the store
+     ------------------------------
+    `;
+  }
+}
+
 export class ReactiveModel {
 
-  protected subscriptions: Subscription[] = [];
 
-  private skipped = [];
-
-  private alreadyRan = false;
-
-  constructor(store?: any) {
-    // console.log('Model', this);
-  }
+  constructor(private _store?: any) {}
 
   protected initialize() {
-    this.apply();
+    this.applyPropertyDecorators();
     this.applySubscriptions();
-  }
-
-  private apply() {
-    const propDecorators = Reflect.getMetadata(PROP_METADATA, this);
-
-    Object.keys(propDecorators).forEach(key => {
-      const values: MetaData[] = propDecorators[key];
-
-      values.forEach(value => {
-        if (value.operator) {
-          this[key] = this[key].pipe(value.operator);
-
-        } else if (value.combinator) {
-          const data = value.combinator;
-
-          const args: Observable<any>[] = data.secondObservable.map(key => {
-            return this[key]
-          });
-
-          if (this[key]) {
-            args.unshift(this[key]);
-          }
-
-          this[key] = (data.operator as any)(...args);
-        }
-      })
-    })
 
   }
 
-
-  private applyCombinators() {
-    const combinatorDecorators: { [k: string]: CombinationMetaData<any, any> } = Reflect.getMetadata(COMBINATION_METADATA, this);
-    if (!combinatorDecorators) {
-      return;
-    }
-
-    Object.keys(combinatorDecorators).forEach(key => {
-      const data: CombinationMetaData<any, any> = combinatorDecorators[key];
-
-      const args: Observable<any>[] = data.secondObservable.map(key => this[key]);
-
-      if (this[key]) {
-        args.unshift(this[key]);
-      }
-
-      this[key] = (data.operator as any)(...args);
-    })
-  }
 
   private applySubscriptions() {
-    const subDecorators: (_: any) => Subscription = Reflect.getMetadata(SUBSCRIPTION_METADATA, this);
+    const metadata: SubscriptionMetadataContainer = Reflect.getMetadata(SUBSCRIPTION_METADATA, this);
 
-    if (!subDecorators) {
+    if (!metadata) {
       return;
     }
 
-    Object.keys(subDecorators).forEach(key => {
-      const obs: Observable<any> = this[key];
-
-      subDecorators[key].forEach((subscriber: (_: any) => Subscription) => {
-        this.subscriptions.push(obs.subscribe(subscriber.bind(this)));
-      })
-
-    })
+    Object.keys(metadata).forEach(this.handleSubscriptionMetadata(metadata));
   }
 
+  private handleSubscriptionMetadata = (metadata: SubscriptionMetadataContainer) => (metadataKey: string) => {
+    const subscriptionMetadata: SubscriptionMetadata[] = metadata[metadataKey];
 
-  private applyPropDecorators() {
-    const propDecorators = Reflect.getMetadata(PROP_METADATA, this);
-    if (!propDecorators) {
-      return;
-    }
-    if (this.alreadyRan) {
-      this.skipped.forEach(key => {
-        // propDecorators[key].forEach(x => print(x.constructor));
-        this[key] = pipeFromArray(propDecorators[key])(this[key]);
-      })
-      return;
-    }
-
-    Object.keys(propDecorators).forEach(key => {
-
-      if (this[key]) {
-        console.log('applying: ', key);
-        this[key] = pipeFromArray(propDecorators[key])(this[key]);
-      } else {
-        console.log('skipping: ', key);
-        this.skipped.push(key);
-      }
-    });
-
-    this.alreadyRan = true;
-  }
-
-  private applySelectDecorators(store: any) {
-    const selectDecorators = Reflect.getMetadata(SELECTOR_METADATA, this);
-
-    if (!selectDecorators) {
-      return;
-    }
-
-    Object.keys(selectDecorators).forEach(key => {
-      this[key] = store.select(selectDecorators[key][0]);
-    });
-  }
-}
-
-function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>): UnaryFunction<T, R> {
-  if (!fns) {
-    return noop as UnaryFunction<any, any>;
-  }
-
-  if (fns.length === 1) {
-    return fns[0];
-  }
-
-  return function piped(input: T): R {
-    return fns.reduce((prev: any, fn: UnaryFunction<T, R>) => fn(prev), input as any);
+    subscriptionMetadata.forEach(this.linkSubscriptions(metadataKey));
   };
-}
 
-function noop() { }
+  private linkSubscriptions = (fnName: string) => (current: SubscriptionMetadata) => {
+    const { propName } = current;
+
+    this.checkType(this[propName], propName, 'Subscribe');
+
+    this[propName].subscribe(this[fnName].bind(this));
+  };
+
+  private applyPropertyDecorators() {
+    const metadata: PropertyMetadataContainer = Reflect.getMetadata(PROP_METADATA, this);
+
+    if (!metadata) {
+      return;
+    }
+
+    Object.keys(metadata).forEach(this.handlePropertyMetadata(metadata));
+  }
+
+  private handlePropertyMetadata = (metadata: PropertyMetadataContainer) => (metadataKey: string) => {
+    const propertyMetadata: AllMetadata[] = metadata[metadataKey];
+
+    propertyMetadata.forEach(this.selectPropertyDecoratorHandler(metadataKey));
+  };
+
+  private selectPropertyDecoratorHandler = (propertyName: string) => (current: AllMetadata) => {
+    switch (current.type) {
+      case MONO_OPERATOR:
+        this.handleMonoOperator(propertyName, current);
+        break;
+      case CREATION_OPERATOR:
+        this.handleCreationOperator(propertyName, current);
+        break;
+      case MULTI_OPERATOR:
+        this.handleMultiOperator(propertyName, current);
+        break;
+      case MAP_TO_OPERATOR:
+        this.handleMapToOperator(propertyName, current);
+        break;
+      case MONO_OPERATOR_LIST:
+        this.handleMonoOperatorList(propertyName, current);
+        break;
+      case SELECTOR_FUNCTION:
+        this.handleSelectorFunction(propertyName, current);
+        break;
+    }
+  };
+
+  private handleSelectorFunction(propertyName: string, current: SelectorMetadata) {
+    if (!this._store) {
+      throw new NoStoreProvidedError(this, propertyName);
+    }
+    this[propertyName] = this._store.select(current.payload.selector);
+  }
+
+  private handleMonoOperatorList(propertyName: string, current: MonoOperatorListMetadata) {
+    const { operators, fns, name } = current.payload;
+
+    if (operators.length !== fns.length) {
+      throw new DifferentOperatorAndFunctionCountError(this, propertyName, name);
+    }
+
+    const observable = this[propertyName];
+
+    this.checkType(observable, propertyName, name);
+
+    const combined = operators.map((op: MonoOperator, index: number) => {
+      return op(fns[index]);
+    });
+
+    this[propertyName] = pipeFromArray(combined)(observable);
+  }
+
+  private handleMapToOperator(propertyName: string, current: MapToOperatorMetadata) {
+    const currentObs = this[propertyName];
+    const currentFn = this[current.payload.functionName];
+
+    this.checkType(currentObs, propertyName, current.payload.name);
+
+    if (!currentFn) {
+      throw new FunctionDoesNotExistError(this, current.payload.functionName, current.payload.name);
+    }
+
+    this[propertyName] = currentObs.pipe(current.payload.operator(currentFn.bind(this)));
+  }
+
+  private handleMultiOperator(propertyName: string, current: MultiOperatorMetadata) {
+    const args: Observable<any>[] = current.payload.parameters.map(objectKey => {
+      const observable = this[objectKey];
+
+      this.checkType(observable, objectKey, current.payload.name);
+
+      return observable;
+    });
+
+    const mainObs: Observable<any> = this[propertyName];
+
+    this.checkType(mainObs, propertyName, current.payload.name);
+
+    this[propertyName] = this[propertyName].pipe(current.payload.operator(...args));
+  }
+
+  private handleCreationOperator(propertyName: string, current: CreationOperatorMetadata) {
+    const toCombine: Observable<any>[] = current.payload.parameters.map(objectKey => {
+      const observable = this[objectKey];
+
+      this.checkType(observable, objectKey, current.payload.name);
+      return observable;
+    });
+
+    const currentObs = this[propertyName];
+    if (currentObs && isObservable(currentObs)) {
+      toCombine.unshift(this[propertyName]);
+    }
+
+    this[propertyName] = current.payload.operator(...toCombine);
+  }
+
+  private handleMonoOperator(propertyName: string, current: MonoOperatorMetadata) {
+    const { operator, name, isBound } = current.payload;
+    let fn = current.payload.fn;
+    const observable: Observable<any> = this[propertyName];
+
+    if (isBound) {
+      fn = fn.bind(this);
+    }
+
+    this.checkType(observable, propertyName, name);
+
+    this[propertyName] = observable.pipe(operator(fn));
+  }
+
+  private checkType(observable: any, propertyName: string, decorator: string) {
+    if (!observable) {
+      throw new PropertyDoesNotExistError(this, propertyName, decorator);
+    }
+
+    if (!isObservable(observable)) {
+      throw new PropertyIsNotObservableError(this, propertyName, decorator);
+    }
+    return true;
+  }
+}

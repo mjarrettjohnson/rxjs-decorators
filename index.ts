@@ -1,17 +1,17 @@
-import { ReactiveModel } from "./src/decorators/reactive-model";
-import { interval, Observable } from "rxjs";
-import { Transform, Filter, Subscribe, CombineLatest, DistinctUntilChanged, Debug, First } from "./src/decorators";
+import { interval, Observable } from 'rxjs';
+import { ReactiveModel } from './src/decorators/reactive-model';
+import { Transform, DistinctUntilChanged, CombineLatest, Subscribe } from './src/decorators/operators';
 
 
-
-const even = (x: number) => x % 2 === 0
+const even = (x: number) => x % 2 === 0;
 const middleChange = (a: number[], b: number[]) => {
   return a[1] === b[1];
-}
+};
 
 export class TestClass extends ReactiveModel {
   counter$: Observable<number> = interval(1000);
 
+  @Transform(x => x * 2)
   counter$2 = interval(500);
 
   @Transform(x => x / 2)
@@ -22,7 +22,6 @@ export class TestClass extends ReactiveModel {
   @CombineLatest('counter$2', 'counter$')
   combined$;
 
-
   @Transform(([x, y]) => x * y)
   @CombineLatest('combined$', 'multiples$')
   combined2$;
@@ -30,7 +29,7 @@ export class TestClass extends ReactiveModel {
   private sideData = 'SIDE';
 
   constructor() {
-    super()
+    super();
     this.initialize();
   }
 

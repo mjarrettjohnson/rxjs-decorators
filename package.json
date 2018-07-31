@@ -4,11 +4,14 @@
   "description": "A series of decorators to use with RxJS",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers ts:ts-node/register ./src/**/*.spec.ts --watch"
+    "start": "./node_modules/.bin/ts-node -P index.ts",
+    "test": "./node_modules/.bin/mocha --compilers ts:ts-node/register ./src/decorators/**/*.spec.ts --watch"
   },
   "author": "Miles Johnson",
   "license": "ISC",
   "dependencies": {
+    "reflect-metadata": "^0.1.12",
+    "reselect": "^3.0.1",
     "rxjs": "^6.2.2"
   },
   "devDependencies": {
