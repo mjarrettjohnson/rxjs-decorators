@@ -1,6 +1,5 @@
 import { interval, Observable } from 'rxjs';
-import { ReactiveModel } from './src/decorators/reactive-model';
-import { Transform, DistinctUntilChanged, CombineLatest, Subscribe } from './src/decorators/operators';
+import { ReactiveModel, Transform, DistinctUntilChanged, CombineLatest, Subscribe } from './src/decorators';
 
 
 const even = (x: number) => x % 2 === 0;

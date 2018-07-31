@@ -1,0 +1,1 @@
+{"version":3,"file":"accessor-decorator.d.ts","sourceRoot":"","sources":["../../../../decorators/creation/accessor-decorator.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,oBAAoB,EAAE,MAAM,aAAa,CAAC;AAEnD,2CAAoC,SAAQ,KAAK;gBACnC,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM;CAW/E;AAED,gDAAwC,CAAC,EAAE,CAAC,EAAE,QAAQ,EAAE,oBAAoB,GAAG,eAAe,CAmB7F"}

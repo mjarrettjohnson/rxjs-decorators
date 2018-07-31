@@ -1,0 +1,1 @@
+{"version":3,"file":"subscription-handler.d.ts","sourceRoot":"","sources":["../../../../decorators/model/subscription-handler.ts"],"names":[],"mappings":"AAAA,OAAO,kBAAkB,CAAC;AAC1B,OAAO,EAAE,aAAa,EAAa,MAAM,kBAAkB,CAAC;AAG5D;IACc,OAAO,CAAC,KAAK;gBAAL,KAAK,EAAE,aAAa;IAExC,KAAK;IAUL,OAAO,CAAC,0BAA0B,CAIhC;IAEF,OAAO,CAAC,iBAAiB,CAUvB;CACH"}
