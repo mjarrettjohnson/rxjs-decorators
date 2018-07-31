@@ -3,6 +3,9 @@
   "include": [
     "**/*.ts"
   ],
+  "exclude": [
+    "**/*.spec.ts"
+  ],
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
