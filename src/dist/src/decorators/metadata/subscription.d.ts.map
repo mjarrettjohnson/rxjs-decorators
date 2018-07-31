@@ -1,1 +1,0 @@
-{"version":3,"file":"subscription.d.ts","sourceRoot":"","sources":["../../../../decorators/metadata/subscription.ts"],"names":[],"mappings":"AAAA,eAAO,MAAM,qBAAqB,0BAA0B,CAAC;AAE7D;IAEqB,QAAQ,EAAE,MAAM;IADnC,QAAQ,CAAC,IAAI,SAAyB;gBACnB,QAAQ,EAAE,MAAM;CACpC;AAED,MAAM,WAAW,6BAA6B;IAC5C,CAAC,GAAG,EAAE,MAAM,GAAG,oBAAoB,EAAE,CAAC;CACvC"}

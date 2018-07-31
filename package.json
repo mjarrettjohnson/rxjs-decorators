@@ -6,7 +6,7 @@
   "scripts": {
     "start": "./node_modules/.bin/ts-node index.ts",
     "test": "./node_modules/.bin/mocha --compilers ts:ts-node/register ./src/decorators/**/*.spec.ts --watch",
-    "build": "./node_modules/.bin/tsc --outDir ./src/dist --declaration --declarationMap --sourceMap"
+    "build": "./node_modules/.bin/tsc   -P tsconfig.json"
   },
   "author": "Miles Johnson",
   "license": "ISC",

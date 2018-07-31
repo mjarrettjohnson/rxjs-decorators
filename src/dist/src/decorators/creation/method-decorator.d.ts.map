@@ -1,1 +1,0 @@
-{"version":3,"file":"method-decorator.d.ts","sourceRoot":"","sources":["../../../../decorators/creation/method-decorator.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,oBAAoB,EAAE,MAAM,aAAa,CAAC;AAEnD,sCAA+B,SAAQ,KAAK;gBAC9B,OAAO,EAAE,MAAM,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM;CAW/E;AAED,8CAAsC,CAAC,EAAE,CAAC,EAAE,QAAQ,EAAE,oBAAoB,GAAG,eAAe,CAgB3F"}
