@@ -5,6 +5,8 @@ import { MapToOperatorMetadata } from "./map-to-operator";
 import { SubscriptionMetadata } from "./subscription";
 import { SelectorMetadata } from "./selectors";
 import { MonoOperatorListMetadata } from './mono-operator-list';
+import { NextOperatorMetadata } from "./next-operator";
+import { InitOperatorMetadata } from "./initialize-operator";
 
 export const PROP_METADATA = '__props__';
 export const SUBSCRIPTION_METADATA = '__subscriptions__';
@@ -16,7 +18,9 @@ export type AllMetadata =
   | MapToOperatorMetadata
   | MonoOperatorListMetadata
   | SubscriptionMetadata
-  | SelectorMetadata;
+  | SelectorMetadata
+  | NextOperatorMetadata
+  | InitOperatorMetadata;
 
 
 export interface PropertyMetadataContainer {
@@ -30,3 +34,5 @@ export * from './mono-operator-list';
 export * from './multi-operator';
 export * from './selectors';
 export * from './subscription';
+export * from './next-operator';
+export * from './initialize-operator'

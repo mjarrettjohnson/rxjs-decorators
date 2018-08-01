@@ -1,6 +1,6 @@
-import { isObservable } from '../utils';
 import { InvalidReturnType } from './method-decorator';
 import { MonoOperatorMetadata } from '../metadata';
+import { isObservable } from 'rxjs';
 
 export class IncorrectDecoratorType extends Error {
   constructor(message: string, context: any, property: string, decorator: string) {

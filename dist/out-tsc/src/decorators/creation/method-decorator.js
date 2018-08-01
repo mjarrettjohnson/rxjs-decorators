@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("../utils");
+var rxjs_1 = require("rxjs");
 var InvalidReturnType = /** @class */ (function (_super) {
     __extends(InvalidReturnType, _super);
     function InvalidReturnType(message, context, property, decorator) {
@@ -28,7 +28,7 @@ function createMethodDecorator(metadata) {
         var _a = metadata.payload, name = _a.name, operator = _a.operator, fn = _a.fn;
         descriptor.value = function () {
             var evaluated = func();
-            if (!utils_1.isObservable(evaluated)) {
+            if (!rxjs_1.isObservable(evaluated)) {
                 throw new InvalidReturnType('Function must return an observable', target, key, name);
             }
             return evaluated.pipe(operator(fn));

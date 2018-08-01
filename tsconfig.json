@@ -1,10 +1,10 @@
 {
-  "compileOnSave": false,
-  "include": [
-    "**/*.ts"
-  ],
+  "compileOnSave": true,
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "node_modules",
+    "./dist/**/*",
+    "./example/**/*"
   ],
   "compilerOptions": {
     "baseUrl": "./",

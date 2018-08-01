@@ -10,6 +10,17 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var rxjs_1 = require("rxjs");
+function checkType(model, observable, propertyName, decorator) {
+    if (!observable) {
+        return new PropertyDoesNotExistError(model, propertyName, decorator);
+    }
+    if (!rxjs_1.isObservable(observable)) {
+        return new PropertyIsNotObservableError(model, propertyName, decorator);
+    }
+    return null;
+}
+exports.checkType = checkType;
 var PropertyDoesNotExistError = /** @class */ (function (_super) {
     __extends(PropertyDoesNotExistError, _super);
     function PropertyDoesNotExistError(context, property, decorator) {

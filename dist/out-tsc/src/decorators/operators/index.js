@@ -16,4 +16,11 @@ __export(require("./shareReplay"));
 __export(require("./subscribe"));
 __export(require("./transform"));
 __export(require("./withLatestFrom"));
+__export(require("./debug"));
+__export(require("./startWith"));
+__export(require("./Pipe"));
+__export(require("./call"));
+__export(require("./next"));
+__export(require("./swap"));
+__export(require("./init"));
 //# sourceMappingURL=index.js.map

@@ -1,4 +1,5 @@
 import { ReactiveModel } from "./reactive-model";
+export declare function checkType(model: ReactiveModel, observable: any, propertyName: string, decorator: string): PropertyDoesNotExistError | PropertyIsNotObservableError;
 export declare class PropertyDoesNotExistError extends Error {
     constructor(context: ReactiveModel, property: string, decorator: string);
 }

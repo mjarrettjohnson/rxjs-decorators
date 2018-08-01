@@ -11,13 +11,13 @@ export * from './shareReplay';
 export * from './subscribe';
 export * from './transform';
 export * from './withLatestFrom';
-
-
-
-
-
-
-
+export * from './debug';
+export * from './startWith';
+export * from './Pipe';
+export * from './call';
+export * from './next';
+export * from './swap';
+export * from './init';
 
 
 

@@ -1,8 +1,10 @@
-import { PropertyDoesNotExistError, PropertyIsNotObservableError } from './errors';
+import { Subscription } from 'rxjs';
 export declare class ReactiveModel {
+    subscriptions: Subscription[];
     private propertyHandler;
     private subscriptionHandler;
     constructor(store?: any);
     protected initialize(): void;
+    protected destroy(): void;
+    protected resubscribe(): void;
 }
-export declare function checkType(model: ReactiveModel, observable: any, propertyName: string, decorator: string): PropertyDoesNotExistError | PropertyIsNotObservableError;

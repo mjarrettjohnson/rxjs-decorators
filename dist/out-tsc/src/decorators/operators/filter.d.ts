@@ -1,1 +1,1 @@
-export declare function Filter(predicate: (_: any) => boolean, isBound?: boolean): (...args: any[]) => any;
+export declare function Filter(predicate: (...args: any[]) => boolean, isBound?: boolean): (...args: any[]) => any;

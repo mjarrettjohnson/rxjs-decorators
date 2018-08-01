@@ -1,4 +1,4 @@
-import { MonoOperatorFn, CallableFn } from "./mono-operator";
+import { MonoOperatorFn, Callable } from "./mono-operator";
 
 
 export const MONO_OPERATOR_LIST = 'Mono Operator List';
@@ -6,7 +6,7 @@ export const MONO_OPERATOR_LIST = 'Mono Operator List';
 export interface MonoOperatorListPayload {
   operators: MonoOperatorFn[];
   name: string;
-  fns: CallableFn[];
+  fns: Callable[];
 }
 
 export class MonoOperatorListMetadata {

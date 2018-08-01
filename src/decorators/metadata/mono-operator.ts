@@ -6,12 +6,12 @@ export const MONO_OPERATOR = 'Mono Operator';
 
 export type MonoOperatorFn = (...args: any[]) => UnaryFunction<any, any>;
 
-export type CallableFn = (...args: any[]) => any;
+export type Callable = ((...args: any[]) => any) | string | number | undefined;
 
 export interface MonoOperatorPayload {
   operator: MonoOperatorFn;
   name: string;
-  fn: CallableFn;
+  fn: Callable;
   isBound?: boolean;
 }
 

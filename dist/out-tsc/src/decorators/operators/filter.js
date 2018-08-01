@@ -8,7 +8,7 @@ function Filter(predicate, isBound) {
         fn: predicate,
         isBound: isBound,
         operator: operators_1.filter,
-        name: 'filter',
+        name: 'Filter',
     });
     return creation_1.createDecorator(metadata);
 }

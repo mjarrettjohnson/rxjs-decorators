@@ -86,7 +86,11 @@
       "single"
     ],
     "radix": true,
-    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "semicolon": [
+      true,
+      "always",
+      "ignore-bound-class-methods"
+    ],
     "triple-equals": [
       true,
       "allow-null-check"
@@ -121,5 +125,9 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true
-  }
+  },
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ]
 }

@@ -1,12 +1,15 @@
 import 'reflect-metadata';
-import { PropertyMetadataContainer, PROP_METADATA, AllMetadata, SelectorMetadata, MonoOperatorListMetadata, MonoOperatorFn, MapToOperatorMetadata, MultiOperatorMetadata, CreationOperatorMetadata, MonoOperatorMetadata, MONO_OPERATOR, CREATION_OPERATOR, MULTI_OPERATOR, MAP_TO_OPERATOR, MONO_OPERATOR_LIST, SELECTOR_FUNCTION } from "../metadata";
-import { NoStoreProvidedError, DifferentOperatorAndFunctionCountError, FunctionDoesNotExistError, PropertyDoesNotExistError, PropertyIsNotObservableError } from "./errors";
-import { Observable } from "rxjs";
-import { isObservable, pipeFromArray } from "../utils";
-import { ReactiveModel, checkType } from "./reactive-model";
+import { PropertyMetadataContainer, PROP_METADATA, AllMetadata, SelectorMetadata, MonoOperatorListMetadata, MonoOperatorFn, MapToOperatorMetadata, MultiOperatorMetadata, CreationOperatorMetadata, MonoOperatorMetadata, MONO_OPERATOR, CREATION_OPERATOR, MULTI_OPERATOR, MAP_TO_OPERATOR, MONO_OPERATOR_LIST, SELECTOR_FUNCTION, NEXT_OPERATOR, NextOperatorMetadata, NextOperatorPayload, SelectorPayload, MonoOperatorListPayload, Callable, MapToOperatorPayload, MultiOperatorPayload, CreationOperatorPayload, MonoOperatorPayload, INIT_OPERATOR, InitOperatorMetadata, InitOperatorPayload } from "../metadata";
+import { NoStoreProvidedError, DifferentOperatorAndFunctionCountError, FunctionDoesNotExistError, PropertyDoesNotExistError, PropertyIsNotObservableError, checkType } from "./errors";
+import { Observable, isObservable, Subject } from "rxjs";
+import { pipeFromArray } from "../utils";
+import { ReactiveModel } from "./reactive-model";
+import { tap } from 'rxjs/operators';
 
 
 export class PropertyDataHandler {
+
+
 
   constructor(private model: ReactiveModel, private store?: any) { };
 
@@ -29,133 +32,212 @@ export class PropertyDataHandler {
   private selectPropertyDecoratorHandler = (propertyName: string) => (current: AllMetadata) => {
     switch (current.type) {
       case MONO_OPERATOR:
-        handleMonoOperator.call(this.model, propertyName, current);
+        handleMonoOperator.bind(this.model)(propertyName, current.payload);
         break;
       case CREATION_OPERATOR:
-        handleCreationOperator.call(this.model, propertyName, current);
+        handleCreationOperator.bind(this.model)(propertyName, current.payload);
         break;
       case MULTI_OPERATOR:
-        handleMultiOperator.call(this.model, propertyName, current);
+        handleMultiOperator.bind(this.model)(propertyName, current.payload);
         break;
       case MAP_TO_OPERATOR:
-        handleMapToOperator.call(this.model, propertyName, current);
+        handleMapToOperator.bind(this.model)(propertyName, current.payload);
         break;
       case MONO_OPERATOR_LIST:
-        handleMonoOperatorList.call(this.model, propertyName, current);
+        handleMonoOperatorList.bind(this.model)(propertyName, current.payload);
         break;
       case SELECTOR_FUNCTION:
-        handleSelectorFunction.call(this.model, propertyName, current);
+        handleSelectorFunction.bind(this.model)(propertyName, current.payload);
         break;
+      case NEXT_OPERATOR:
+        handleNextFunction.bind(this.model)(propertyName, current.payload);
+        break;
+      case INIT_OPERATOR:
+        handleInitOperator.bind(this.model)(propertyName, current.payload);
     }
   };
 
 }
 
-function handleSelectorFunction(propertyName: string, current: SelectorMetadata) {
-  if (!this._store) {
-    throw new NoStoreProvidedError(this, propertyName);
-  }
-  this[propertyName] = this._store.select(current.payload.selector);
+const getterFactory = (context: ReactiveModel) => (name: string) => {
+  return context[name];
 }
 
-function handleMonoOperatorList(propertyName: string, current: MonoOperatorListMetadata) {
-  const { operators, fns, name } = current.payload;
+const setterFactory = (context: ReactiveModel, name: string) => (value: any) => {
+  context[name] = value
 
-  if (operators.length !== fns.length) {
-    throw new DifferentOperatorAndFunctionCountError(this, propertyName, name);
+}
+
+
+function handleInitOperator(propertyName, payload: InitOperatorPayload) {
+  const { name, observable } = payload;
+
+
+  if (!observable || !isObservable(observable)) {
+    throw new Error('Observable was undefined');
   }
 
-  const observable = this[propertyName];
+  const set = setterFactory(this, propertyName);
 
-  const error = checkType(this.model, observable, propertyName, name);
+  set(observable);
+
+}
+
+function handleNextFunction(propertyName, payload: NextOperatorPayload) {
+  const { subjectName, name } = payload;
+
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
+
+  const subject: Subject<any> = get(subjectName);
+
+  const error = checkType(this, subject, subjectName, name);
 
   if (error) {
     throw error;
   }
 
-  const combined = operators.map((op: MonoOperatorFn, index: number) => {
-    return op(fns[index]);
-  });
+  const obs = get(propertyName).pipe(tap(x => subject.next(x)));
 
-  this[propertyName] = pipeFromArray(combined)(observable);
+  set(obs);
 }
 
-function handleMapToOperator(propertyName: string, current: MapToOperatorMetadata) {
-  const currentObs = this[propertyName];
-  const currentFn = this[current.payload.functionName];
+function handleSelectorFunction(propertyName: string, payload: SelectorPayload) {
+  const { selector } = payload;
 
-  const error = checkType(this.model, currentObs, propertyName, name);
+  if (!this._store) {
+    throw new NoStoreProvidedError(this, propertyName);
+  }
+
+  const set = setterFactory(this, propertyName);
+
+  set(this._store.select(selector));
+}
+
+const isNotCorrectFunctionCount = (operators: MonoOperatorFn[], fns: Callable[]) => operators.length !== fns.length
+
+const applyOperatorsWith = (fns: Callable[]) => (operator: MonoOperatorFn, index: number) => operator(fns[index]);
+
+function handleMonoOperatorList(propertyName: string, payload: MonoOperatorListPayload) {
+  const { operators, fns, name } = payload;
+
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
+
+  if (isNotCorrectFunctionCount(operators, fns)) {
+    throw new DifferentOperatorAndFunctionCountError(this, propertyName, name);
+  }
+
+  const observable = get(propertyName);
+
+  const error = checkType(this, observable, propertyName, name);
+
+  if (error) {
+    throw error;
+  }
+
+  const pipeline = pipeFromArray(operators.map(applyOperatorsWith(fns)));
+
+  set(pipeline(observable));
+}
+
+function handleMapToOperator(propertyName: string, payload: MapToOperatorPayload) {
+  const { functionName, operator, name } = payload;
+
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
+
+  const currentObs = get(propertyName);
+  const currentFn = get(functionName);
+
+  const error = checkType(this, currentObs, propertyName, name);
 
   if (error) {
     throw error;
   }
 
   if (!currentFn) {
-    throw new FunctionDoesNotExistError(this, current.payload.functionName, current.payload.name);
+    throw new FunctionDoesNotExistError(this, functionName, name);
   }
 
-  this[propertyName] = currentObs.pipe(current.payload.operator(currentFn.bind(this)));
+  const updatedObs = currentObs.pipe(operator(currentFn.bind(this)));
+
+  set(updatedObs);
 }
 
-function handleMultiOperator(propertyName: string, current: MultiOperatorMetadata) {
-  const args: Observable<any>[] = current.payload.parameters.map(objectKey => {
-    const observable = this[objectKey];
+const allParametersExist = (that) => (property: string) => {
 
-    const error = checkType(this.model, observable, propertyName, name);
+  const get = getterFactory(that);
 
-    if (error) {
-      throw error;
-    }
+  const observable = get(property);
 
-    return observable;
-  });
-
-  const mainObs: Observable<any> = this[propertyName];
-
-  const error = checkType(this.model, mainObs, propertyName, name);
+  const error = checkType(this, observable, property, name);
 
   if (error) {
     throw error;
   }
 
-  this[propertyName] = this[propertyName].pipe(current.payload.operator(...args));
+  return observable;
 }
 
-function handleCreationOperator(propertyName: string, current: CreationOperatorMetadata) {
-  const toCombine: Observable<any>[] = current.payload.parameters.map(objectKey => {
-    const observable = this[objectKey];
+function handleMultiOperator(propertyName: string, payload: MultiOperatorPayload) {
+  const { name, operator, parameters } = payload;
 
-    const error = checkType(this.model, observable, propertyName, name);
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
 
-    if (error) {
-      throw error;
-    }
+  const args: Observable<any>[] = parameters.map(allParametersExist(this));
 
-    return observable;
-  });
+  const error = checkType(this, get(propertyName), propertyName, name);
 
-  const currentObs = this[propertyName];
-  if (currentObs && isObservable(currentObs)) {
-    toCombine.unshift(this[propertyName]);
+  if (error) {
+    throw error;
   }
 
-  this[propertyName] = current.payload.operator(...toCombine);
+  const observable: Observable<any> = get(propertyName).pipe(operator(...args));
+
+  set(observable);
 }
 
-function handleMonoOperator(propertyName: string, current: MonoOperatorMetadata) {
-  const { operator, name, isBound } = current.payload;
-  let fn = current.payload.fn;
-  const observable: Observable<any> = this[propertyName];
 
-  if (isBound) {
+
+function handleCreationOperator(propertyName: string, payload: CreationOperatorPayload) {
+
+  const { name, operator, parameters } = payload;
+
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
+
+  const toCombine: Observable<any>[] = parameters.map(allParametersExist(this));
+
+  const currentObs = get(propertyName);
+
+  if (currentObs && isObservable(currentObs)) {
+    toCombine.unshift(currentObs);
+  }
+
+  set(operator(...toCombine));
+}
+
+function handleMonoOperator(propertyName: string, payload: MonoOperatorPayload) {
+  const { operator, name, isBound } = payload;
+  let fn = payload.fn;
+
+
+  const get = getterFactory(this);
+  const set = setterFactory(this, propertyName);
+
+  const observable: Observable<any> = get(propertyName);
+
+  if (isBound && typeof fn === 'function') {
     fn = fn.bind(this);
   }
 
-  const error = checkType(this.model, observable, propertyName, name);
+  const error = checkType(this, observable, propertyName, name);
 
   if (error) {
     throw error;
   }
 
-  this[propertyName] = observable.pipe(operator(fn));
+  set(observable.pipe(operator(fn)));
 }

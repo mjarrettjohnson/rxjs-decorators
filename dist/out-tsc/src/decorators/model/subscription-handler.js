@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-var reactive_model_1 = require("./reactive-model");
 var metadata_1 = require("../metadata");
+var errors_1 = require("./errors");
 var SubscriptionDataHandler = /** @class */ (function () {
     function SubscriptionDataHandler(model) {
         var _this = this;
@@ -13,11 +13,11 @@ var SubscriptionDataHandler = /** @class */ (function () {
         }; };
         this.linkSubscriptions = function (fnName) { return function (current) {
             var propName = current.propName;
-            var error = reactive_model_1.checkType(_this.model, _this.model[propName], propName, 'Subscribe');
+            var error = errors_1.checkType(_this.model, _this.model[propName], propName, 'Subscribe');
             if (error) {
                 throw error;
             }
-            _this.model[propName].subscribe(_this.model[fnName].bind(_this.model));
+            _this.model.subscriptions.push(_this.model[propName].subscribe(_this.model[fnName].bind(_this.model)));
         }; };
     }
     SubscriptionDataHandler.prototype.apply = function () {

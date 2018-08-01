@@ -12,4 +12,6 @@ __export(require("./mono-operator-list"));
 __export(require("./multi-operator"));
 __export(require("./selectors"));
 __export(require("./subscription"));
+__export(require("./next-operator"));
+__export(require("./initialize-operator"));
 //# sourceMappingURL=index.js.map

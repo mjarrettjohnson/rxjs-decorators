@@ -7,7 +7,7 @@ export function Debug(tag: string = 'DEBUG::') {
     fn: x => console.log(tag, x),
     isBound: true,
     operator: tap,
-    name: 'tap',
+    name: 'Debug',
   });
   return createDecorator(metadata);
 }

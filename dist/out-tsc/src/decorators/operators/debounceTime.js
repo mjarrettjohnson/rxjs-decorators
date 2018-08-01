@@ -5,7 +5,7 @@ var operators_1 = require("rxjs/operators");
 var creation_1 = require("../creation");
 function DebounceTime(time, isBound) {
     var metadata = new metadata_1.MonoOperatorMetadata({
-        fn: function () { return time; },
+        fn: time,
         isBound: isBound,
         operator: operators_1.debounceTime,
         name: 'debounceTime',

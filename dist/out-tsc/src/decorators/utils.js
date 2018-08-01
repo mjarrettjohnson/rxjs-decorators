@@ -1,7 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var rxjs_1 = require("rxjs");
-exports.isObservable = function (x) { return x instanceof rxjs_1.Observable; };
 exports.propertyExists = function (o, key) { return !!o[key]; };
 function pipeFromArray(fns) {
     if (!fns) {

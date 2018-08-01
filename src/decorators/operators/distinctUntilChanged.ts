@@ -5,7 +5,7 @@ import { createDecorator } from "../creation";
 
 export function DistinctUntilChanged(comparator?: (x: any, y: any) => boolean) {
   const metadata = new MonoOperatorMetadata({
-    fn: comparator ? comparator : noop,
+    fn: comparator,
     isBound: true,
     operator: distinctUntilChanged,
     name: 'distinctUntilChanged',

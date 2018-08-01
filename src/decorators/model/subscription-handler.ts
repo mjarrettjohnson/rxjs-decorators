@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-import { ReactiveModel, checkType } from "./reactive-model";
+import { ReactiveModel } from "./reactive-model";
 import { SUBSCRIPTION_METADATA, SubscriptionMetadataContainer, SubscriptionMetadata } from "../metadata";
+import { checkType } from './errors';
 
 export class SubscriptionDataHandler {
   constructor(private model: ReactiveModel) { }
@@ -30,6 +31,6 @@ export class SubscriptionDataHandler {
       throw error;
     }
 
-    this.model[propName].subscribe(this.model[fnName].bind(this.model));
+    this.model.subscriptions.push(this.model[propName].subscribe(this.model[fnName].bind(this.model)));
   };
 }

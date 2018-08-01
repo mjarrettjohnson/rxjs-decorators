@@ -4,7 +4,7 @@ import { createDecorator } from "../creation";
 
 export function DebounceTime(time: number, isBound?: boolean) {
   const metadata = new MonoOperatorMetadata({
-    fn: () => time,
+    fn: time,
     isBound,
     operator: debounceTime,
     name: 'debounceTime',

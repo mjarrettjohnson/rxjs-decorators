@@ -9,7 +9,7 @@ function Debug(tag) {
         fn: function (x) { return console.log(tag, x); },
         isBound: true,
         operator: operators_1.tap,
-        name: 'tap',
+        name: 'Debug',
     });
     return creation_1.createDecorator(metadata);
 }

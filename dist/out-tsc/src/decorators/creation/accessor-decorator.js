@@ -10,8 +10,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("../utils");
 var method_decorator_1 = require("./method-decorator");
+var rxjs_1 = require("rxjs");
 var IncorrectDecoratorType = /** @class */ (function (_super) {
     __extends(IncorrectDecoratorType, _super);
     function IncorrectDecoratorType(message, context, property, decorator) {
@@ -32,7 +32,7 @@ function createAccessorDecorator(metadata) {
         var func = descriptor.get;
         descriptor.get = function () {
             var evaluated = func();
-            if (!utils_1.isObservable(evaluated)) {
+            if (!rxjs_1.isObservable(evaluated)) {
                 throw new method_decorator_1.InvalidReturnType('Accessor must return an observable', target, key, name);
             }
             return evaluated.pipe(operator(fn));

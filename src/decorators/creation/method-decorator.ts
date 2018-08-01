@@ -1,5 +1,5 @@
-import { isObservable } from '../utils';
 import { MonoOperatorMetadata } from '../metadata';
+import { isObservable } from 'rxjs';
 
 export class InvalidReturnType extends Error {
   constructor(message: string, context: any, property: string, decorator: string) {

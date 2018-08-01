@@ -8,7 +8,7 @@ function Transform(transform, isBound) {
         fn: transform,
         isBound: isBound,
         operator: operators_1.map,
-        name: 'map',
+        name: 'Transform',
     });
     return creation_1.createDecorator(metadata);
 }
