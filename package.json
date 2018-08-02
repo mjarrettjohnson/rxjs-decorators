@@ -2,12 +2,14 @@
   "name": "rxjs-decorators",
   "version": "1.0.0",
   "description": "A series of decorators to use with RxJS",
-  "main": "dist/out-tsc/index.js",
-  "types": "dist/out-tsc/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "start": "./node_modules/.bin/ts-node index.ts",
     "test": "./node_modules/.bin/mocha --compilers ts:ts-node/register ./src/decorators/**/*.spec.ts --watch",
-    "build": "./node_modules/.bin/tsc   -P tsconfig.json"
+    "build": "./node_modules/.bin/tsc   -P tsconfig.json",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json --fix"
   },
   "author": "Miles Johnson",
   "license": "ISC",

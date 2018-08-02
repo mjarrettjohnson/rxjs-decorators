@@ -1,17 +1,5 @@
-import { ReactiveModel } from "./reactive-model";
-import { isObservable } from "rxjs";
-
-
-export function checkType(model: ReactiveModel, observable: any, propertyName: string, decorator: string) {
-  if (!observable) {
-    return new PropertyDoesNotExistError(model, propertyName, decorator);
-  }
-
-  if (!isObservable(observable)) {
-    return new PropertyIsNotObservableError(model, propertyName, decorator);
-  }
-  return null;
-}
+import { isObservable } from 'rxjs';
+import { ReactiveModel } from './reactive-model';
 
 export class PropertyDoesNotExistError extends Error {
   constructor(context: ReactiveModel, property: string, decorator: string) {
@@ -79,4 +67,15 @@ export class NoStoreProvidedError extends Error {
      ------------------------------
     `;
   }
+}
+
+export function checkType(model: ReactiveModel, observable: any, propertyName: string, decorator: string) {
+  if (!observable) {
+    return new PropertyDoesNotExistError(model, propertyName, decorator);
+  }
+
+  if (!isObservable(observable)) {
+    return new PropertyIsNotObservableError(model, propertyName, decorator);
+  }
+  return null;
 }

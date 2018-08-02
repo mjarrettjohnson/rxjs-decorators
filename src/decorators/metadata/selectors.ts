@@ -1,4 +1,4 @@
-import { Selector } from "reselect";
+import { Selector } from 'reselect';
 
 export const SELECTOR_FUNCTION = 'Selector Function';
 
@@ -9,5 +9,5 @@ export interface SelectorPayload {
 export class SelectorMetadata {
   readonly type = SELECTOR_FUNCTION;
 
-  constructor(public payload: SelectorPayload) { }
+  constructor(public payload: SelectorPayload) {}
 }

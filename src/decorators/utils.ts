@@ -2,7 +2,6 @@ import { Observable, UnaryFunction } from 'rxjs';
 
 export const propertyExists = (o: object, key: string) => !!o[key];
 
-
 export function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>): UnaryFunction<T, R> {
   if (!fns) {
     return noop as UnaryFunction<any, any>;
@@ -17,4 +16,4 @@ export function pipeFromArray<T, R>(fns: Array<UnaryFunction<T, R>>): UnaryFunct
   };
 }
 
-export function noop() { }
+export function noop() {}

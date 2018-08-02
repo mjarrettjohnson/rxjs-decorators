@@ -1,3 +1,4 @@
 node_modules/*
 .vscode/*
 example-app/node_modules/*
+lib/*

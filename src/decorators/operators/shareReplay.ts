@@ -1,6 +1,6 @@
-import { createDecorator } from "../creation";
-import { shareReplay } from "rxjs/operators";
-import { MonoOperatorMetadata } from "../metadata";
+import { shareReplay } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MonoOperatorMetadata } from '../metadata';
 
 export function ShareReplay(replayCount: number) {
   const metadata = new MonoOperatorMetadata({

@@ -1,9 +1,9 @@
-import { UnaryFunction, ObservableInput, Observable, OperatorFunction } from 'rxjs';
 import { Selector } from 'reselect';
+import { Observable, ObservableInput, OperatorFunction, UnaryFunction } from 'rxjs';
 
 export const MULTI_OPERATOR = 'Multi Operator';
 
-export type MultiOperator = (...array: ObservableInput<any>[]) => OperatorFunction<any, any>;
+export type MultiOperator = (...array: Array<ObservableInput<any>>) => OperatorFunction<any, any>;
 
 export interface MultiOperatorPayload {
   operator: MultiOperator;
@@ -14,5 +14,5 @@ export interface MultiOperatorPayload {
 export class MultiOperatorMetadata {
   readonly type = MULTI_OPERATOR;
 
-  constructor(public payload: MultiOperatorPayload) { }
+  constructor(public payload: MultiOperatorPayload) {}
 }

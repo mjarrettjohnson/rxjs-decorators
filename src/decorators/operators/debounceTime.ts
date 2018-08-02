@@ -1,6 +1,6 @@
-import { MonoOperatorMetadata } from "../metadata";
-import { debounceTime } from "rxjs/operators";
-import { createDecorator } from "../creation";
+import { debounceTime } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MonoOperatorMetadata } from '../metadata';
 
 export function DebounceTime(time: number, isBound?: boolean) {
   const metadata = new MonoOperatorMetadata({
@@ -11,4 +11,3 @@ export function DebounceTime(time: number, isBound?: boolean) {
   });
   return createDecorator(metadata);
 }
-

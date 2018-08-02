@@ -1,7 +1,7 @@
-import { MonoOperatorMetadata, MapToOperatorMetadata } from "../metadata";
-import { map, switchMap } from "rxjs/operators";
-import { createDecorator } from "../creation";
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MapToOperatorMetadata, MonoOperatorMetadata } from '../metadata';
 
 export function Swap(switchFn: (_: any) => Observable<any>) {
   const metadata = new MonoOperatorMetadata({
@@ -17,7 +17,7 @@ export function SwapTo(functionName: string) {
   const metadata = new MapToOperatorMetadata({
     functionName,
     name: 'SwitchTo',
-    operator: switchMap
+    operator: switchMap,
   });
   return createDecorator(metadata);
 }

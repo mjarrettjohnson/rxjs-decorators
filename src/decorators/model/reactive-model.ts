@@ -1,45 +1,49 @@
-import { Observable, isObservable, Subscription } from 'rxjs';
-import { pipeFromArray } from '../utils';
+import { isObservable, Observable, Subscription } from 'rxjs';
 import {
-  SubscriptionMetadataContainer,
-  SUBSCRIPTION_METADATA,
-  SubscriptionMetadata,
-  PropertyMetadataContainer,
-  PROP_METADATA,
   AllMetadata,
-  MONO_OPERATOR,
   CREATION_OPERATOR,
-  MULTI_OPERATOR,
+  CreationOperatorMetadata,
   MAP_TO_OPERATOR,
+  MapToOperatorMetadata,
+  MONO_OPERATOR,
   MONO_OPERATOR_LIST,
+  MonoOperatorFn,
+  MonoOperatorListMetadata,
+  MonoOperatorMetadata,
+  MULTI_OPERATOR,
+  MultiOperatorMetadata,
+  PROP_METADATA,
+  PropertyMetadataContainer,
   SELECTOR_FUNCTION,
   SelectorMetadata,
-  MonoOperatorListMetadata,
-  MonoOperatorFn,
-  MapToOperatorMetadata,
-  MultiOperatorMetadata,
-  CreationOperatorMetadata,
-  MonoOperatorMetadata
+  SUBSCRIPTION_METADATA,
+  SubscriptionMetadata,
+  SubscriptionMetadataContainer,
 } from '../metadata';
-import { NoStoreProvidedError, DifferentOperatorAndFunctionCountError, FunctionDoesNotExistError, PropertyDoesNotExistError, PropertyIsNotObservableError } from './errors';
-import { PropertyDataHandler } from './property-handler';
-import { SubscriptionDataHandler } from './subscription-handler';
+import { pipeFromArray } from '../utils';
+import {
+  DifferentOperatorAndFunctionCountError,
+  FunctionDoesNotExistError,
+  NoStoreProvidedError,
+  PropertyDoesNotExistError,
+  PropertyIsNotObservableError,
+} from './errors';
+import { PropertyDataRetriever, SubscriptionDataRetriever } from './retriever';
 
 export class ReactiveModel {
-
   subscriptions: Subscription[] = [];
 
-  private propertyHandler: PropertyDataHandler
-  private subscriptionHandler: SubscriptionDataHandler;
+  private propertyRetriever: PropertyDataRetriever;
+  private subscriptionRetriever: SubscriptionDataRetriever;
 
-  constructor(store?: any) {
-    this.propertyHandler = new PropertyDataHandler(this, store);
-    this.subscriptionHandler = new SubscriptionDataHandler(this);
+  constructor(public store?: any) {
+    this.propertyRetriever = new PropertyDataRetriever(this, store);
+    this.subscriptionRetriever = new SubscriptionDataRetriever(this);
   }
 
   protected initialize() {
-    this.propertyHandler.apply();
-    this.subscriptionHandler.apply();
+    this.propertyRetriever.retrieve();
+    this.subscriptionRetriever.retrieve();
   }
 
   protected destroy() {
@@ -47,6 +51,6 @@ export class ReactiveModel {
   }
 
   protected resubscribe() {
-    this.subscriptionHandler.apply();
+    this.subscriptionRetriever.retrieve();
   }
 }

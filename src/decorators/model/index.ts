@@ -1,2 +1,2 @@
-export * from "./reactive-model";
+export * from './reactive-model';
 export * from './errors';

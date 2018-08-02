@@ -1,5 +1,5 @@
-import { MonoOperatorMetadata } from '../metadata';
 import { isObservable } from 'rxjs';
+import { MonoOperatorMetadata } from '../metadata';
 
 export class InvalidReturnType extends Error {
   constructor(message: string, context: any, property: string, decorator: string) {
@@ -16,12 +16,12 @@ export class InvalidReturnType extends Error {
 }
 
 export function createMethodDecorator<T, K>(metadata: MonoOperatorMetadata): MethodDecorator {
-  return function (target: any, key: string, descriptor: any) {
+  return function(target: any, key: string, descriptor: any) {
     const func = descriptor.value;
 
     const { name, operator, fn } = metadata.payload;
 
-    descriptor.value = function () {
+    descriptor.value = function() {
       const evaluated = func();
       if (!isObservable(evaluated)) {
         throw new InvalidReturnType('Function must return an observable', target, key, name);

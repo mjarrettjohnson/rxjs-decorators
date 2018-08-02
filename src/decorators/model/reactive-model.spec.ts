@@ -3,7 +3,13 @@ import { filter, first, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { createDecorator, createSubscriptionDecorator } from '../creation';
 import { ReactiveModel } from './reactive-model';
 import { noop } from '../utils';
-import { MonoOperatorMetadata, MonoOperatorListMetadata, MapToOperatorMetadata, CreationOperatorMetadata, MultiOperatorMetadata } from '../metadata';
+import {
+  MonoOperatorMetadata,
+  MonoOperatorListMetadata,
+  MapToOperatorMetadata,
+  CreationOperatorMetadata,
+  MultiOperatorMetadata,
+} from '../metadata';
 
 describe(' -> Reactive Model', () => {
   it('should', () => {
@@ -64,7 +70,8 @@ describe(' -> Reactive Model', () => {
 
       one$ = of(1);
 
-      @ScreamEven hello$ = interval(1000);
+      @ScreamEven
+      hello$ = interval(1000);
 
       constructor() {
         super();

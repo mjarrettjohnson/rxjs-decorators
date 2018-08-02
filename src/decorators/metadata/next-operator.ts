@@ -1,9 +1,8 @@
-import { UnaryFunction, ObservableInput, Observable, OperatorFunction } from 'rxjs';
 import { Selector } from 'reselect';
+import { Observable, ObservableInput, OperatorFunction, UnaryFunction } from 'rxjs';
 import { Callable } from './mono-operator';
 
 export const NEXT_OPERATOR = 'Next Operator';
-
 
 export interface NextOperatorPayload {
   subjectName: string;
@@ -13,5 +12,5 @@ export interface NextOperatorPayload {
 export class NextOperatorMetadata {
   readonly type = NEXT_OPERATOR;
 
-  constructor(public payload: NextOperatorPayload) { }
+  constructor(public payload: NextOperatorPayload) {}
 }

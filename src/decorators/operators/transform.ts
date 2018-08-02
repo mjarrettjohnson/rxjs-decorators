@@ -1,6 +1,6 @@
-import { MonoOperatorMetadata } from "../metadata";
-import { map } from "rxjs/operators";
-import { createDecorator } from "../creation";
+import { map } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MonoOperatorMetadata } from '../metadata';
 
 export function Transform(transform: (_: any) => any, isBound?: boolean) {
   const metadata = new MonoOperatorMetadata({

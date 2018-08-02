@@ -1,6 +1,6 @@
-import { UnaryFunction, ObservableInput } from 'rxjs';
-import { Observable } from 'rxjs';
 import { Selector } from 'reselect';
+import { ObservableInput, UnaryFunction } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export const MONO_OPERATOR = 'Mono Operator';
 
@@ -18,6 +18,5 @@ export interface MonoOperatorPayload {
 export class MonoOperatorMetadata {
   readonly type = MONO_OPERATOR;
 
-  constructor(public payload: MonoOperatorPayload) { }
+  constructor(public payload: MonoOperatorPayload) {}
 }
-

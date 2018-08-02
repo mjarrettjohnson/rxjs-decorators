@@ -1,6 +1,6 @@
-import { filter, startWith } from "rxjs/operators";
-import { MonoOperatorMetadata } from "../metadata";
-import { createDecorator } from "../creation";
+import { filter, startWith } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MonoOperatorMetadata } from '../metadata';
 
 export function StartWith(startingValue: any) {
   const metadata = new MonoOperatorMetadata({

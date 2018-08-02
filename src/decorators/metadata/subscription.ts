@@ -1,8 +1,10 @@
 export const SUBSCRIPTION_FUNCTION = 'Subscription Function';
 
+export type SubscriptionMetadataPayload = string[];
+
 export class SubscriptionMetadata {
   readonly type = SUBSCRIPTION_FUNCTION;
-  constructor(public propName: string) { }
+  constructor(public payload: string[]) {}
 }
 
 export interface SubscriptionMetadataContainer {

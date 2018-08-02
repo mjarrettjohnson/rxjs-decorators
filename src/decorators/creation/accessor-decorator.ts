@@ -1,6 +1,6 @@
-import { InvalidReturnType } from './method-decorator';
-import { MonoOperatorMetadata } from '../metadata';
 import { isObservable } from 'rxjs';
+import { MonoOperatorMetadata } from '../metadata';
+import { InvalidReturnType } from './method-decorator';
 
 export class IncorrectDecoratorType extends Error {
   constructor(message: string, context: any, property: string, decorator: string) {
@@ -17,7 +17,7 @@ export class IncorrectDecoratorType extends Error {
 }
 
 export function createAccessorDecorator<T, K>(metadata: MonoOperatorMetadata): MethodDecorator {
-  return function (target: any, key: string, descriptor: any) {
+  return function(target: any, key: string, descriptor: any) {
     const { name, operator, fn } = metadata.payload;
 
     if (!descriptor.get) {
@@ -25,7 +25,7 @@ export function createAccessorDecorator<T, K>(metadata: MonoOperatorMetadata): M
     }
     const func = descriptor.get;
 
-    descriptor.get = function () {
+    descriptor.get = function() {
       const evaluated = func();
       if (!isObservable(evaluated)) {
         throw new InvalidReturnType('Accessor must return an observable', target, key, name);

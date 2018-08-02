@@ -1,7 +1,7 @@
-import { MonoOperatorMetadata } from "../metadata";
-import { noop } from "rxjs";
-import { first } from "rxjs/operators";
-import { createDecorator } from "../creation";
+import { noop } from 'rxjs';
+import { first } from 'rxjs/operators';
+import { createDecorator } from '../creation';
+import { MonoOperatorMetadata } from '../metadata';
 
 export function First(isBound?: boolean) {
   const metadata = new MonoOperatorMetadata({
@@ -12,5 +12,3 @@ export function First(isBound?: boolean) {
   });
   return createDecorator(metadata);
 }
-
-
