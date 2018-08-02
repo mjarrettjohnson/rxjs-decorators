@@ -41,7 +41,7 @@ const handleFunctionalDecorator = (metadata: AllMetadata, ...args: any[]) => {
         ? createAccessorDecorator(metadata).apply(this, args)
         : createMethodDecorator(metadata).apply(this, args);
     case SUBSCRIPTION_FUNCTION:
-      return createSubscriptionDecorator(metadata.propName).apply(this, args);
+      return createSubscriptionDecorator(metadata.payload).apply(this, args);
     case MULTI_OPERATOR:
     case CREATION_OPERATOR:
       throw new InvalidMetadataForDecoratorError();

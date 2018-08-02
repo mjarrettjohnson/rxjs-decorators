@@ -1,8 +1,6 @@
 import 'reflect-metadata';
 import { isObservable, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { pipeFromArray } from '../../utils';
-import { HandlerFactory, MetadataHandler } from '../handler';
 import {
   AllMetadata,
   Callable,
@@ -33,8 +31,8 @@ import {
   SELECTOR_FUNCTION,
   SelectorMetadata,
   SelectorPayload,
-} from '../metadata';
-import { ReactiveModel } from './../reactive-model';
+} from '../../metadata';
+import { pipeFromArray } from '../../utils';
 import {
   checkType,
   DifferentOperatorAndFunctionCountError,
@@ -42,7 +40,9 @@ import {
   NoStoreProvidedError,
   PropertyDoesNotExistError,
   PropertyIsNotObservableError,
-} from './errors';
+} from '../errors';
+import { HandlerFactory, MetadataHandler } from '../handler';
+import { ReactiveModel } from './../reactive-model';
 
 export class PropertyDataRetriever {
   constructor(private model: ReactiveModel, store?: any) {}

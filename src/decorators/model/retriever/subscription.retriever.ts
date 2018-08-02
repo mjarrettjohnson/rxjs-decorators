@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import { SUBSCRIPTION_METADATA, SubscriptionMetadata, SubscriptionMetadataContainer } from '../metadata';
-import { checkType } from './errors';
-import { ReactiveModel } from './reactive-model';
+import { SUBSCRIPTION_METADATA, SubscriptionMetadata, SubscriptionMetadataContainer } from '../../metadata';
+import { checkType } from '../errors';
+import { ReactiveModel } from '../reactive-model';
 
 export class SubscriptionDataRetriever {
   constructor(private model: ReactiveModel) {}
