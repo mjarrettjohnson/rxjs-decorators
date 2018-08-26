@@ -3,7 +3,7 @@
   "exclude": [
     "**/*.spec.ts",
     "node_modules",
-    "./dist/**/*",
+    "./lib/**/*",
     "./example/**/*"
   ],
   "compilerOptions": {

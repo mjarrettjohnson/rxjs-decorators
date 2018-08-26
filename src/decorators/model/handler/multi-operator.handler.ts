@@ -12,7 +12,7 @@ export class MultiOperatorHandler implements MetadataHandler {
     const get = getterFactory(model);
     const set = setterFactory(model, propertyName);
 
-    const args: Array<Observable<any>> = parameters.map(allParametersExist(this));
+    const args: Array<Observable<any>> = parameters.map(allParametersExist(model));
 
     const error = checkType(model, get(propertyName), propertyName, name);
 

@@ -9,3 +9,7 @@ export declare class ReactiveModel {
     protected destroy(): void;
     protected resubscribe(): void;
 }
+export declare class ReactiveComponent<T> extends ReactiveModel {
+    private formModel;
+    constructor(formModel: T);
+}

@@ -8,6 +8,7 @@ import {
   MULTI_OPERATOR,
   NEXT_OPERATOR,
   SELECTOR_FUNCTION,
+  SUBSCRIPTION_FUNCTION,
 } from '../../metadata';
 import { CreationOperatorHandler } from './creation-operator.handler';
 import { MetadataHandler } from './handler';
@@ -18,6 +19,7 @@ import { MonoOperatorHandler } from './mono-operator.handler';
 import { MultiOperatorHandler } from './multi-operator.handler';
 import { NextOperatorhandler } from './next-operator.handler';
 import { SelectorFunctionHandler } from './selector-function.handler';
+import { SubscriptionHandler } from './subscription.handler';
 
 export class HandlerFactory {
   create(type: string): MetadataHandler {
@@ -38,6 +40,8 @@ export class HandlerFactory {
         return new NextOperatorhandler();
       case INIT_OPERATOR:
         return new InitOperatorHandler();
+      case SUBSCRIPTION_FUNCTION:
+        return new SubscriptionHandler();
     }
   }
 }

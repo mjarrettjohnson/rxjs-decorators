@@ -29,7 +29,7 @@ const isAccessor = (args: any[]) => !!args[2].get;
 
 const handlePropertyDecorator = (metadata: AllMetadata, ...args: any[]) => {
   if (metadata.type === SUBSCRIPTION_FUNCTION) {
-    throw new CannotSubscribeToPropertyError();
+    metadata.payload.push(args[1]);
   }
   createPropertyDecorator(metadata).apply(this, args);
 };
