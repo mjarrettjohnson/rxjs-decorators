@@ -1,6 +1,14 @@
+/**
+ * @module creation
+ */
+
 import { isObservable } from 'rxjs';
 import { MonoOperatorMetadata } from '../metadata';
 
+/**
+ * An error that is thrown if an observable is not returned
+ * from a method that a decorator is applied to
+ */
 export class InvalidReturnType extends Error {
   constructor(message: string, context: any, property: string, decorator: string) {
     const error = `
@@ -15,7 +23,15 @@ export class InvalidReturnType extends Error {
   }
 }
 
-export function createMethodDecorator<T, K>(metadata: MonoOperatorMetadata): MethodDecorator {
+/**
+ *
+ * Returns a decorator that will evaluate the decorated method
+ * and apply a single rxjs operator and corresponding function / data
+ * to its return.
+ *
+ * @param {MonoOperatorMetadata} metadata the method context
+ */
+export function createMethodDecorator(metadata: MonoOperatorMetadata): any {
   return function(target: any, key: string, descriptor: any) {
     const func = descriptor.value;
 

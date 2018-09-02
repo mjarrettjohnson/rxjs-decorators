@@ -1,3 +1,7 @@
+/**
+ * @module operators
+ */
+
 import { BehaviorSubject, merge, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { createDecorator } from '../creation';

@@ -1,3 +1,6 @@
+/**
+ * @module operators
+ */
 import { map } from 'rxjs/operators';
 import { createDecorator } from '../creation';
 import { MonoOperatorMetadata } from '../metadata';

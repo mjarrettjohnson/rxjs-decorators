@@ -1,12 +1,14 @@
-import { merge } from 'rxjs';
+/**
+ * @module operators
+ */
 import { tap } from 'rxjs/operators';
 import { createDecorator } from '../creation';
-import { CreationOperatorMetadata, MapToOperatorMetadata, NextOperatorMetadata } from '../metadata';
+import { MapToOperatorMetadata } from '../metadata';
 
-export function Call(functionName: string) {
+export function Call(methodName: string) {
   const metadata = new MapToOperatorMetadata({
     name: 'Call',
-    functionName,
+    methodName,
     operator: tap,
   });
   return createDecorator(metadata);

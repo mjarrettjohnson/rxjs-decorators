@@ -1,6 +1,12 @@
+/**
+ * @module model
+ */
 import { isObservable } from 'rxjs';
 import { ReactiveModel } from './reactive-model';
 
+/**
+ * Thrown when a decorator is applied to an undefined property.
+ */
 export class PropertyDoesNotExistError extends Error {
   constructor(context: ReactiveModel, property: string, decorator: string) {
     super();
@@ -14,6 +20,9 @@ export class PropertyDoesNotExistError extends Error {
   }
 }
 
+/**
+ * Thrown when a decorator is applied to a non observable property.
+ */
 export class PropertyIsNotObservableError extends Error {
   constructor(context: ReactiveModel, property: string, decorator: string) {
     super();
@@ -27,7 +36,9 @@ export class PropertyIsNotObservableError extends Error {
     `;
   }
 }
-
+/**
+ * Thrown when a function does not exist on a reactive model at the property provided.
+ */
 export class FunctionDoesNotExistError extends Error {
   constructor(context: ReactiveModel, property: string, decorator: string) {
     super();
@@ -42,6 +53,10 @@ export class FunctionDoesNotExistError extends Error {
   }
 }
 
+/**
+ * Thrown when a different number of operators and operator functions has
+ * been supplied
+ */
 export class DifferentOperatorAndFunctionCountError extends Error {
   constructor(context: ReactiveModel, property: string, decorator: string) {
     super();
@@ -56,6 +71,10 @@ export class DifferentOperatorAndFunctionCountError extends Error {
   }
 }
 
+/**
+ * Thrown when the selector decorator is used by no NgRx Store
+ * has been injected.
+ */
 export class NoStoreProvidedError extends Error {
   constructor(context: ReactiveModel, property: string) {
     super();
@@ -69,6 +88,15 @@ export class NoStoreProvidedError extends Error {
   }
 }
 
+/**
+ * Throws an error if the retrieved property does not exist or is
+ * not an observable.
+ *
+ * @param model the reactive model to check
+ * @param observable the observable that was retrieved from the model
+ * @param propertyName the property that was used to retrieve the observable
+ * @param decorator the decorator that was used.
+ */
 export function checkType(model: ReactiveModel, observable: any, propertyName: string, decorator: string) {
   if (!observable) {
     return new PropertyDoesNotExistError(model, propertyName, decorator);

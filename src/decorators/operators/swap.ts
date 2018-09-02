@@ -1,3 +1,7 @@
+/**
+ * @module operators
+ */
+
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { createDecorator } from '../creation';
@@ -13,9 +17,9 @@ export function Swap(switchFn: (_: any) => Observable<any>) {
   return createDecorator(metadata);
 }
 
-export function SwapTo(functionName: string) {
+export function SwapTo(methodName: string) {
   const metadata = new MapToOperatorMetadata({
-    functionName,
+    methodName,
     name: 'SwitchTo',
     operator: switchMap,
   });

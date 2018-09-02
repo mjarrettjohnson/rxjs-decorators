@@ -1,6 +1,9 @@
-import { merge } from 'rxjs';
+/**
+ * @module operators
+ */
+
 import { createDecorator } from '../creation';
-import { CreationOperatorMetadata, NextOperatorMetadata } from '../metadata';
+import { NextOperatorMetadata } from '../metadata';
 
 export function Next(subjectName: string) {
   const metadata = new NextOperatorMetadata({

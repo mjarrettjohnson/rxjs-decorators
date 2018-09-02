@@ -1,3 +1,7 @@
+/**
+ * @module metadata
+ */
+
 import { CreationOperatorMetadata, CreationOperatorPayload } from './creation-operator';
 import { InitOperatorMetadata, InitOperatorPayload } from './initialize-operator';
 import { MapToOperatorMetadata, MapToOperatorPayload } from './map-to-operator';
@@ -46,3 +50,4 @@ export * from './selectors';
 export * from './subscription';
 export * from './next-operator';
 export * from './initialize-operator';
+export * from './metadata-handler';

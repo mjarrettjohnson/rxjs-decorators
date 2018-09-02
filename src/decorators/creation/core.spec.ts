@@ -1,12 +1,11 @@
-import { createMethodDecorator, InvalidReturnType } from './method-decorator';
-import { createAccessorDecorator, IncorrectDecoratorType } from './accessor-decorator';
-import { createPropertyDecorator } from './property-decorator';
-
-import { first, distinctUntilChanged, withLatestFrom } from 'rxjs/operators';
 import { expect } from 'chai';
-import { of, combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
+import { distinctUntilChanged, first, withLatestFrom } from 'rxjs/operators';
+import { CreationOperatorMetadata, MonoOperatorMetadata, MultiOperatorMetadata, PROP_METADATA } from '../metadata';
+import { createAccessorDecorator, IncorrectDecoratorType } from './accessor-decorator';
 import { createDecorator, InvalidMetadataForDecoratorError } from './core';
-import { MonoOperatorMetadata, PROP_METADATA, MultiOperatorMetadata, CreationOperatorMetadata } from '../metadata';
+import { createMethodDecorator, InvalidReturnType } from './method-decorator';
+import { createPropertyDecorator } from './property-decorator';
 
 describe('-> Create Method Decorator', () => {
   it('should throw an invalid return type error if no observable is returned', () => {
@@ -105,7 +104,11 @@ describe('-> Create Accessor Decorator', () => {
 
 describe('-> Create Property Decorator', () => {
   it('should create a new key on the metadata for an metadata payload', () => {
-    const payload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const payload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const First = createPropertyDecorator(payload);
 
     class Test {
@@ -119,7 +122,11 @@ describe('-> Create Property Decorator', () => {
   });
 
   it('should handle adding multiple decorators', () => {
-    const firstPayload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const firstPayload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const distinctPayload = new MonoOperatorMetadata({
       operator: distinctUntilChanged,
       fn: () => {},
@@ -141,7 +148,11 @@ describe('-> Create Property Decorator', () => {
   });
 
   it('should add decorators from bottom to top', () => {
-    const firstPayload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const firstPayload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const distinctPayload = new MonoOperatorMetadata({
       operator: distinctUntilChanged,
       fn: () => {},
@@ -163,15 +174,19 @@ describe('-> Create Property Decorator', () => {
   });
 
   it('should handle adding different types of metadata', () => {
-    const firstPayload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const firstPayload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const combinePayload = new CreationOperatorMetadata({
       operator: combineLatest,
-      parameters: ['data$, id$'],
+      observableProperties: ['data$, id$'],
       name: 'combineLatest',
     });
     const withLatestPayload = new MultiOperatorMetadata({
       operator: withLatestFrom,
-      parameters: ['data$', 'id$'],
+      operatorArgs: ['data$', 'id$'],
       name: 'withLatestFrom',
     });
 
@@ -191,15 +206,19 @@ describe('-> Create Property Decorator', () => {
   });
 
   it('should handle metadata to different properties', () => {
-    const firstPayload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const firstPayload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const combinePayload = new CreationOperatorMetadata({
       operator: combineLatest,
-      parameters: ['data$, id$'],
+      observableProperties: ['data$, id$'],
       name: 'combineLatest',
     });
     const withLatestPayload = new MultiOperatorMetadata({
       operator: withLatestFrom,
-      parameters: ['data$', 'id$'],
+      operatorArgs: ['data$', 'id$'],
       name: 'withLatestFrom',
     });
 
@@ -229,7 +248,11 @@ describe('-> Create Property Decorator', () => {
 
 describe('-> Create Decorator', () => {
   it('should create a mono operator property decorator', () => {
-    const payload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const payload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const First = createDecorator(payload);
 
     class Test {
@@ -245,7 +268,7 @@ describe('-> Create Decorator', () => {
   it('should create a multi operator property decorator', () => {
     const combinePayload = new CreationOperatorMetadata({
       operator: combineLatest,
-      parameters: ['data$, id$'],
+      observableProperties: ['data$, id$'],
       name: 'combineLatest',
     });
 
@@ -263,7 +286,7 @@ describe('-> Create Decorator', () => {
   it('should create a combination operator property decorator', () => {
     const withLatestPayload = new MultiOperatorMetadata({
       operator: withLatestFrom,
-      parameters: ['data$', 'id$'],
+      operatorArgs: ['data$', 'id$'],
       name: 'withLatestFrom',
     });
 
@@ -279,7 +302,11 @@ describe('-> Create Decorator', () => {
   });
 
   it('should create a mono operator method decorator', () => {
-    const payload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const payload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const First = createDecorator(payload);
 
     class Test {
@@ -294,7 +321,11 @@ describe('-> Create Decorator', () => {
   });
 
   it('should create a mono operator accessor decorator', () => {
-    const payload = new MonoOperatorMetadata({ operator: first, fn: () => {}, name: 'first' });
+    const payload = new MonoOperatorMetadata({
+      operator: first,
+      fn: () => {},
+      name: 'first',
+    });
     const First = createDecorator(payload);
 
     class Test {
@@ -311,7 +342,7 @@ describe('-> Create Decorator', () => {
   it('should throw an error when a non mono operator  decorator is applied to a method', () => {
     const payload = new MultiOperatorMetadata({
       operator: withLatestFrom,
-      parameters: ['something'],
+      operatorArgs: ['something'],
       name: 'withLatestFrom',
     });
 
@@ -334,7 +365,7 @@ describe('-> Create Decorator', () => {
   it('should throw an error when a non mono operator  decorator is applied to an accessor', () => {
     const payload = new MultiOperatorMetadata({
       operator: withLatestFrom,
-      parameters: ['something'],
+      operatorArgs: ['something'],
       name: 'withLatestFrom',
     });
 

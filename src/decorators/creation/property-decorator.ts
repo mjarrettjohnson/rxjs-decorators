@@ -1,10 +1,21 @@
+/**
+ * @module creation
+ */
+
 import 'reflect-metadata';
-import { Selector } from 'reselect';
-import { Observable, ObservableInput, OperatorFunction, UnaryFunction } from 'rxjs';
-import { AllMetadata, PROP_METADATA, PropertyMetadataContainer, SubscriptionMetadata } from '../metadata';
+import { AllMetadata, PROP_METADATA, PropertyMetadataContainer } from '../metadata';
 import { propertyExists } from '../utils';
 
-export const createPropertyDecorator = <T, K>(payload: AllMetadata) => (target: object, key: string) => {
+/**
+ * Stores the necessary context information in the classes metadata via the property
+ * the decorator is attached to. At runtime this context information is retrieved and
+ * used by a custom built handler.
+ *
+ * @see createDecorator
+ *
+ * @param payload context information that is used by the associated metadata handler
+ */
+export const createPropertyDecorator = (payload: AllMetadata) => (target: object, key: string) => {
   const metadata = Reflect.getMetadata(PROP_METADATA, target) || ({} as PropertyMetadataContainer);
 
   if (!propertyExists(metadata, key)) {

@@ -1,3 +1,7 @@
+/**
+ * @module operators
+ */
+
 import { noop } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { createDecorator } from '../creation';

@@ -1,4 +1,7 @@
-import { filter, startWith } from 'rxjs/operators';
+/**
+ * @module operators
+ */
+import { startWith } from 'rxjs/operators';
 import { createDecorator } from '../creation';
 import { MonoOperatorMetadata } from '../metadata';
 
