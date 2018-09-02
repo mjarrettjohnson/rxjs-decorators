@@ -3,6 +3,10 @@
 Rxjs-Decorators is a library that you can use to apply observable pipelines using decorators. Using decorators to apply
 your pipeline operators forces a more functional style and creates more readable code.
 
+## Docs
+
+Documentation can be found [here](http://miles-johnson.me)
+
 ## Usage
 
 To use decorators in your project first ensure that your class extends `ReactiveModel` and secondly calls the initialize
