@@ -1,1 +1,1 @@
-export declare function Call(functionName: string): (...args: any[]) => any;
+export declare function Call(methodName: string): (...args: any[]) => any;
